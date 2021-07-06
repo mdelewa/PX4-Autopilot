@@ -142,6 +142,8 @@ private:
 	bool _is_tailsitter{false};
 
 	DEFINE_PARAMETERS(
+		(ParamBool<px4::params::FW_LQR_ATT_EN>) _param_fw_lqr_att_en,
+
 		(ParamFloat<px4::params::FW_ACRO_X_MAX>) _param_fw_acro_x_max,
 		(ParamFloat<px4::params::FW_ACRO_Y_MAX>) _param_fw_acro_y_max,
 		(ParamFloat<px4::params::FW_ACRO_Z_MAX>) _param_fw_acro_z_max,

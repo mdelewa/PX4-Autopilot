@@ -735,3 +735,18 @@ PARAM_DEFINE_FLOAT(FW_DTRIM_R_FLPS, 0.0f);
  * @increment 0.01
  */
 PARAM_DEFINE_FLOAT(FW_DTRIM_P_FLPS, 0.0f);
+
+/**
+ * Enable LQR attitude controller
+ *
+ * This enables an lqr based attitude controller that takes
+ * attitude (phi,theta,psi) setpoints and generates
+ * control actions (aileron,rudder,elevator).
+ *
+ * Enable when using LQR control Loop
+ * Disable when using original Px4 PID control Loops
+ *
+ * @boolean
+ * @group FW Attitude Control
+ */
+PARAM_DEFINE_INT32(FW_LQR_ATT_EN, 1);
