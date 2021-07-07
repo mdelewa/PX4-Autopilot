@@ -82,6 +82,20 @@ public:
 		_bodyrate_setpoint = math::constrain(rate, -_max_rate_neg, _max_rate);
 	}
 
+	void set_states_0(float u_0, float w_0, float q_0, float th_0)
+	{
+		_u0  = u_0;
+		_w0  = w_0;
+		_q0  = q_0;
+		_th0 = th_0;
+	}
+
+private:
+	float _u0;
+	float _w0;
+	float _q0;
+	float _th0;
+
 protected:
 	float _max_rate_neg{0.0f};
 };
