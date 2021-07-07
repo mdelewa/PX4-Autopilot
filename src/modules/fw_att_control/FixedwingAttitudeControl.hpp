@@ -156,7 +156,7 @@ private:
 		(ParamFloat<px4::params::K_LQR_ELE_W>) _param_k_lqr_ele_w,
 		(ParamFloat<px4::params::K_LQR_ELE_Q>) _param_k_lqr_ele_q,
 		(ParamFloat<px4::params::K_LQR_ELE_TH>) _param_k_lqr_ele_th,
-		(ParamFloat<px4::params::K_LQR_ELE_IEQ>) _param_k_lqr_ele_ieq,
+		(ParamFloat<px4::params::K_LQR_ELE_IETH>) _param_k_lqr_ele_ieth,
 		(ParamFloat<px4::params::K_LQR_AIL_V>) _param_k_lqr_ail_v,
 		(ParamFloat<px4::params::K_LQR_AIL_P>) _param_k_lqr_ail_p,
 		(ParamFloat<px4::params::K_LQR_AIL_R>) _param_k_lqr_ail_r,
