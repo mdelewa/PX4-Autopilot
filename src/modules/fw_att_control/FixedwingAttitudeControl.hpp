@@ -142,9 +142,16 @@ private:
 	bool _is_tailsitter{false};
 
 	DEFINE_PARAMETERS(
-		/* Added by Gemie for LQR */
 
+		/* Added by Gemie for LQR */
+		// LQR flag
 		(ParamBool<px4::params::FW_LQR_ATT_EN>) _param_fw_lqr_att_en,
+		// States_0
+		(ParamFloat<px4::params::FW_LQR_U0>) _param_fw_lqr_u0,
+		(ParamFloat<px4::params::FW_LQR_W0>) _param_fw_lqr_w0,
+		(ParamFloat<px4::params::FW_LQR_Q0>) _param_fw_lqr_q0,
+		(ParamFloat<px4::params::FW_LQR_TH0>) _param_fw_lqr_th0,
+		// Gains
 		(ParamFloat<px4::params::K_LQR_ELE_U>) _param_k_lqr_ele_u,
 		(ParamFloat<px4::params::K_LQR_ELE_W>) _param_k_lqr_ele_w,
 		(ParamFloat<px4::params::K_LQR_ELE_Q>) _param_k_lqr_ele_q,
