@@ -64,6 +64,8 @@ public:
 	float control_euler_rate(const float dt, const ECL_ControlData &ctl_data) override;
 	float control_bodyrate(const float dt, const ECL_ControlData &ctl_data) override;
 
+	float control_attitude_elevator_LQR(const float dt, const ECL_ControlData &ctl_data);
+
 	/* Additional Setters */
 	void set_max_rate_pos(float max_rate_pos)
 	{
