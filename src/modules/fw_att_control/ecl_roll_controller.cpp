@@ -142,7 +142,7 @@ float ECL_RollController::control_attitude_aileron_LQR(const float dt, const ECL
 	float delta_r  = ctl_data.body_z_rate;
 	float delta_ph = ctl_data.roll;
 
-	if (!ctl_data.lock_integrator && _k_i > 0.0f) {
+	if (!ctl_data.lock_integrator) {
 
 		/* Integral term scales with 1/IAS^2 */
 		//float id = _rate_error * dt * ctl_data.scaler * ctl_data.scaler;

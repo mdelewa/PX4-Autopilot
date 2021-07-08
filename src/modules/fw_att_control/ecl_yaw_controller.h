@@ -64,6 +64,25 @@ public:
 
 	float control_attitude_rudder_LQR(const float dt, const ECL_ControlData &ctl_data);
 
+	void set_lqr_gains(float gain_v, float gain_p, float gain_r, float gain_ph,  float gain_intg_ph)
+	{
+		_k_rud_v       = gain_v;
+		_k_rud_p       = gain_p;
+		_k_rud_r       = gain_r;
+		_k_rud_ph      = gain_ph;
+		_k_rud_intg_ph = gain_intg_ph;
+	}
+
+private:
+
+	float _k_rud_v;
+	float _k_rud_p;
+	float _k_rud_r;
+	float _k_rud_ph;
+	float _k_rud_intg_ph;
+
+	float _roll_error;
+
 protected:
 	float _max_rate{0.0f};
 

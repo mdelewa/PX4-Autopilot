@@ -146,7 +146,7 @@ float ECL_PitchController::control_attitude_elevator_LQR(const float dt, const E
 	float delta_q  = ctl_data.body_y_rate-_q0;
 	float delta_th = ctl_data.pitch-_th0;
 
-	if (!ctl_data.lock_integrator && _k_i > 0.0f) {
+	if (!ctl_data.lock_integrator) {
 
 		/* Integral term scales with 1/IAS^2 */
 		//float id = _rate_error * dt * ctl_data.scaler * ctl_data.scaler;
