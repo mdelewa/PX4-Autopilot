@@ -55,9 +55,6 @@ struct ECL_ControlData {
 	float u;
 	float v;
 	float w;
-	float u_dot;
-	float v_dot;
-	float w_dot;
 	float roll;
 	float pitch;
 	float yaw;
