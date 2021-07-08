@@ -107,6 +107,7 @@ FixedwingAttitudeControl::parameters_update()
 	_yaw_ctrl.set_k_i(_param_fw_yr_i.get());
 	_yaw_ctrl.set_k_ff(_param_fw_yr_ff.get());
 	_yaw_ctrl.set_integrator_max(_param_fw_yr_imax.get());
+	_yaw_ctrl.set_lqr_gains( _param_k_lqr_rud_v.get(), _param_k_lqr_rud_p.get(), _param_k_lqr_rud_r.get(), _param_k_lqr_rud_ph.get(), _param_k_lqr_rud_ieph.get());
 
 	/* wheel control parameters */
 	_wheel_ctrl.set_k_p(_param_fw_wr_p.get());
