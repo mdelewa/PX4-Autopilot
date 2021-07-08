@@ -91,6 +91,8 @@ FixedwingAttitudeControl::parameters_update()
 	_pitch_ctrl.set_k_i(_param_fw_pr_i.get());
 	_pitch_ctrl.set_k_ff(_param_fw_pr_ff.get());
 	_pitch_ctrl.set_integrator_max(_param_fw_pr_imax.get());
+	_pitch_ctrl.set_states_0(_param_fw_lqr_u0.get(), _param_fw_lqr_w0.get(), _param_fw_lqr_q0.get(), _param_fw_lqr_th0.get());
+	_pitch_ctrl.set_gains( _param_k_lqr_ele_u.get(), _param_k_lqr_ele_w.get(), _param_k_lqr_ele_q.get(), _param_k_lqr_ele_th.get(), _param_k_lqr_ele_ieth.get());
 
 	/* roll control parameters */
 	_roll_ctrl.set_time_constant(_param_fw_r_tc.get());
