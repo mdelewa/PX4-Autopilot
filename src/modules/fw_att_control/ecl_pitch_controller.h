@@ -90,7 +90,7 @@ public:
 		_th0 = th_0;
 	}
 
-	void set_gains(float gain_u, float gain_w, float gain_q, float gain_th,  float gain_intg_th)
+	void set_lqr_gains(float gain_u, float gain_w, float gain_q, float gain_th,  float gain_intg_th)
 	{
 		_k_ele_u       = gain_u;
 		_k_ele_w       = gain_w;

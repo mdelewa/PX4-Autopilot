@@ -64,7 +64,7 @@ public:
 
 	float control_attitude_aileron_LQR(const float dt, const ECL_ControlData &ctl_data);
 
-	void set_gains(float gain_v, float gain_p, float gain_r, float gain_ph,  float gain_intg_ph)
+	void set_lqr_gains(float gain_v, float gain_p, float gain_r, float gain_ph,  float gain_intg_ph)
 	{
 		_k_ail_v       = gain_v;
 		_k_ail_p       = gain_p;
