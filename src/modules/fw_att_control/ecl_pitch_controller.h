@@ -96,6 +96,14 @@ private:
 	float _q0;
 	float _th0;
 
+	float _k_ele_u;
+	float _k_ele_w;
+	float _k_ele_q;
+	float _k_ele_th;
+	float _k_ele_intg_th;
+
+	float _pitch_error;
+
 protected:
 	float _max_rate_neg{0.0f};
 };
