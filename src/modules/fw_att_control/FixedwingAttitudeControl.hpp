@@ -147,12 +147,12 @@ private:
 		// LQR flag
 		(ParamBool<px4::params::FW_LQR_ATT_EN>) _param_fw_lqr_att_en,
 		// States_0
-		/*(ParamFloat<px4::params::FW_LQR_U0>) _param_fw_lqr_u0,
+		(ParamFloat<px4::params::FW_LQR_U0>) _param_fw_lqr_u0,
 		(ParamFloat<px4::params::FW_LQR_W0>) _param_fw_lqr_w0,
 		(ParamFloat<px4::params::FW_LQR_Q0>) _param_fw_lqr_q0,
-		(ParamFloat<px4::params::FW_LQR_TH0>) _param_fw_lqr_th0,*/
+		(ParamFloat<px4::params::FW_LQR_TH0>) _param_fw_lqr_th0,
 		// Gains
-		/*(ParamFloat<px4::params::K_LQR_ELE_U>) _param_k_lqr_ele_u,
+		(ParamFloat<px4::params::K_LQR_ELE_U>) _param_k_lqr_ele_u,
 		(ParamFloat<px4::params::K_LQR_ELE_W>) _param_k_lqr_ele_w,
 		(ParamFloat<px4::params::K_LQR_ELE_Q>) _param_k_lqr_ele_q,
 		(ParamFloat<px4::params::K_LQR_ELE_TH>) _param_k_lqr_ele_th,
@@ -162,13 +162,11 @@ private:
 		(ParamFloat<px4::params::K_LQR_AIL_R>) _param_k_lqr_ail_r,
 		(ParamFloat<px4::params::K_LQR_AIL_PH>) _param_k_lqr_ail_ph,
 		(ParamFloat<px4::params::K_LQR_AIL_IEPH>) _param_k_lqr_ail_ieph,
-		(ParamFloat<px4::params::K_LQR_AIL_IEVDOT>) _param_k_lqr_ail_ievdot,
 		(ParamFloat<px4::params::K_LQR_RUD_V>) _param_k_lqr_rud_v,
 		(ParamFloat<px4::params::K_LQR_RUD_P>) _param_k_lqr_rud_p,
 		(ParamFloat<px4::params::K_LQR_RUD_R>) _param_k_lqr_rud_r,
 		(ParamFloat<px4::params::K_LQR_RUD_PH>) _param_k_lqr_rud_ph,
 		(ParamFloat<px4::params::K_LQR_RUD_IEPH>) _param_k_lqr_rud_ieph,
-		(ParamFloat<px4::params::K_LQR_RUD_IEVDOT>) _param_k_lqr_rud_ievdot,*/
 
 		(ParamFloat<px4::params::FW_ACRO_X_MAX>) _param_fw_acro_x_max,
 		(ParamFloat<px4::params::FW_ACRO_Y_MAX>) _param_fw_acro_y_max,
@@ -236,6 +234,7 @@ private:
 		(ParamFloat<px4::params::TRIM_PITCH>) _param_trim_pitch,
 		(ParamFloat<px4::params::TRIM_ROLL>) _param_trim_roll,
 		(ParamFloat<px4::params::TRIM_YAW>) _param_trim_yaw
+
 	)
 
 	ECL_RollController		_roll_ctrl;
