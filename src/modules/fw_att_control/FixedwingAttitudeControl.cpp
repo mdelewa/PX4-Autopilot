@@ -423,8 +423,15 @@ void FixedwingAttitudeControl::Run()
 				_wheel_ctrl.reset_integrator();
 			}
 
+			// Get velocity in body frame
+			_local_pos_sub.update(&_local_pos);
+			matrix::Vector3f vel_body = matrix::Quatf(att.q).conjugate_inversed(matrix::Vector3f(_local_pos.vx, _local_pos.vy, _local_pos.vz));
+
 			/* Prepare data for attitude controllers */
 			ECL_ControlData control_input{};
+			control_input.u = vel_body(1);
+			control_input.v = vel_body(2);
+			control_input.w = vel_body(3);
 			control_input.roll = euler_angles.phi();
 			control_input.pitch = euler_angles.theta();
 			control_input.yaw = euler_angles.psi();
@@ -441,7 +448,7 @@ void FixedwingAttitudeControl::Run()
 			control_input.lock_integrator = lock_integrator;
 
 			if (wheel_control) {
-				_local_pos_sub.update(&_local_pos);
+				//_local_pos_sub.update(&_local_pos);
 
 				/* Use stall airspeed to calculate ground speed scaling region.
 				* Don't scale below gspd_scaling_trim
@@ -507,59 +514,96 @@ void FixedwingAttitudeControl::Run()
 			/* Run attitude controllers */
 			if (_vcontrol_mode.flag_control_attitude_enabled) {
 				if (PX4_ISFINITE(_att_sp.roll_body) && PX4_ISFINITE(_att_sp.pitch_body)) {
-					_roll_ctrl.control_attitude(dt, control_input);
-					_pitch_ctrl.control_attitude(dt, control_input);
+					if (_use_lqr_flag){
+						float roll_u  = _roll_ctrl.control_attitude_aileron_LQR(dt, control_input);
+						float pitch_u = _pitch_ctrl.control_attitude_elevator_LQR(dt, control_input);
+						float yaw_u = 0.0f;
+						yaw_u = _yaw_ctrl.control_attitude_rudder_LQR(dt, control_input);
+						_actuators.control[actuator_controls_s::INDEX_ROLL] = (PX4_ISFINITE(roll_u)) ? roll_u + trim_roll : trim_roll;
 
-					if (wheel_control) {
-						_wheel_ctrl.control_attitude(dt, control_input);
-						_yaw_ctrl.reset_integrator();
+						if (!PX4_ISFINITE(roll_u)) {
+							_roll_ctrl.reset_integrator();
+						}
 
-					} else {
+						_actuators.control[actuator_controls_s::INDEX_PITCH] = (PX4_ISFINITE(pitch_u)) ? pitch_u + trim_pitch : trim_pitch;
+
+						if (!PX4_ISFINITE(pitch_u)) {
+							_pitch_ctrl.reset_integrator();
+						}
+
+
+						_actuators.control[actuator_controls_s::INDEX_YAW] = (PX4_ISFINITE(yaw_u)) ? yaw_u + trim_yaw : trim_yaw;
+
+						/* add in manual rudder control in manual modes */
+						if (_vcontrol_mode.flag_control_manual_enabled) {
+							_actuators.control[actuator_controls_s::INDEX_YAW] += _manual_control_setpoint.r;
+						}
+
+						if (!PX4_ISFINITE(yaw_u)) {
+							_yaw_ctrl.reset_integrator();
+							_wheel_ctrl.reset_integrator();
+						}
+
+
+					}
+					else{
+						_roll_ctrl.control_attitude(dt, control_input);
+						_pitch_ctrl.control_attitude(dt, control_input);
+
+						if (wheel_control) {
+							_wheel_ctrl.control_attitude(dt, control_input);
+							_yaw_ctrl.reset_integrator();
+						} else {
 						// runs last, because is depending on output of roll and pitch attitude
 						_yaw_ctrl.control_attitude(dt, control_input);
 						_wheel_ctrl.reset_integrator();
-					}
+						}
+						/* Update input data for rate controllers */
+						control_input.roll_rate_setpoint = _roll_ctrl.get_desired_rate();
+						control_input.pitch_rate_setpoint = _pitch_ctrl.get_desired_rate();
+						control_input.yaw_rate_setpoint = _yaw_ctrl.get_desired_rate();
+						/* Run attitude RATE controllers which need the desired attitudes from above, add trim */
+						float roll_u = _roll_ctrl.control_euler_rate(dt, control_input);
+						float pitch_u = _pitch_ctrl.control_euler_rate(dt, control_input);
 
-					/* Update input data for rate controllers */
-					control_input.roll_rate_setpoint = _roll_ctrl.get_desired_rate();
-					control_input.pitch_rate_setpoint = _pitch_ctrl.get_desired_rate();
-					control_input.yaw_rate_setpoint = _yaw_ctrl.get_desired_rate();
+						float yaw_u = 0.0f;
 
-					/* Run attitude RATE controllers which need the desired attitudes from above, add trim */
-					float roll_u = _roll_ctrl.control_euler_rate(dt, control_input);
-					_actuators.control[actuator_controls_s::INDEX_ROLL] = (PX4_ISFINITE(roll_u)) ? roll_u + trim_roll : trim_roll;
-
-					if (!PX4_ISFINITE(roll_u)) {
-						_roll_ctrl.reset_integrator();
-					}
-
-					float pitch_u = _pitch_ctrl.control_euler_rate(dt, control_input);
-					_actuators.control[actuator_controls_s::INDEX_PITCH] = (PX4_ISFINITE(pitch_u)) ? pitch_u + trim_pitch : trim_pitch;
-
-					if (!PX4_ISFINITE(pitch_u)) {
-						_pitch_ctrl.reset_integrator();
-					}
-
-					float yaw_u = 0.0f;
-
-					if (wheel_control) {
-						yaw_u = _wheel_ctrl.control_bodyrate(dt, control_input);
-
-					} else {
+						if (wheel_control) {
+							yaw_u = _wheel_ctrl.control_bodyrate(dt, control_input);
+						} else {
 						yaw_u = _yaw_ctrl.control_euler_rate(dt, control_input);
+						}
+
+						_actuators.control[actuator_controls_s::INDEX_ROLL] = (PX4_ISFINITE(roll_u)) ? roll_u + trim_roll : trim_roll;
+
+						if (!PX4_ISFINITE(roll_u)) {
+							_roll_ctrl.reset_integrator();
+						}
+
+						_actuators.control[actuator_controls_s::INDEX_PITCH] = (PX4_ISFINITE(pitch_u)) ? pitch_u + trim_pitch : trim_pitch;
+
+						if (!PX4_ISFINITE(pitch_u)) {
+							_pitch_ctrl.reset_integrator();
+						}
+
+
+						_actuators.control[actuator_controls_s::INDEX_YAW] = (PX4_ISFINITE(yaw_u)) ? yaw_u + trim_yaw : trim_yaw;
+
+						/* add in manual rudder control in manual modes */
+						if (_vcontrol_mode.flag_control_manual_enabled) {
+							_actuators.control[actuator_controls_s::INDEX_YAW] += _manual_control_setpoint.r;
+						}
+
+						if (!PX4_ISFINITE(yaw_u)) {
+							_yaw_ctrl.reset_integrator();
+							_wheel_ctrl.reset_integrator();
+						}
+
+
 					}
 
-					_actuators.control[actuator_controls_s::INDEX_YAW] = (PX4_ISFINITE(yaw_u)) ? yaw_u + trim_yaw : trim_yaw;
 
-					/* add in manual rudder control in manual modes */
-					if (_vcontrol_mode.flag_control_manual_enabled) {
-						_actuators.control[actuator_controls_s::INDEX_YAW] += _manual_control_setpoint.r;
-					}
 
-					if (!PX4_ISFINITE(yaw_u)) {
-						_yaw_ctrl.reset_integrator();
-						_wheel_ctrl.reset_integrator();
-					}
 
 					/* throttle passed through if it is finite and if no engine failure was detected */
 					_actuators.control[actuator_controls_s::INDEX_THROTTLE] = (PX4_ISFINITE(_att_sp.thrust_body[0])
