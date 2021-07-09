@@ -141,6 +141,8 @@ private:
 
 	bool _is_tailsitter{false};
 
+	bool _use_lqr_flag{true};
+
 	DEFINE_PARAMETERS(
 
 		/* Added by Gemie for LQR */

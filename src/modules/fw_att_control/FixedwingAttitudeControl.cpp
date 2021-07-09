@@ -85,6 +85,9 @@ FixedwingAttitudeControl::init()
 int
 FixedwingAttitudeControl::parameters_update()
 {
+	/*Controller Type Flag (PID or LQR)*/
+	_use_lqr_flag = _param_fw_lqr_att_en.get();
+
 	/* pitch control parameters */
 	_pitch_ctrl.set_time_constant(_param_fw_p_tc.get());
 	_pitch_ctrl.set_k_p(_param_fw_pr_p.get());
