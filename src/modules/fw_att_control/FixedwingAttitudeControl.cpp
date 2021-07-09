@@ -627,8 +627,8 @@ void FixedwingAttitudeControl::Run()
 
 		// Add feed-forward from roll control output to yaw control output
 		// This can be used to counteract the adverse yaw effect when rolling the plane
-		_actuators.control[actuator_controls_s::INDEX_YAW] += _param_fw_rll_to_yaw_ff.get()
-				* constrain(_actuators.control[actuator_controls_s::INDEX_ROLL], -1.0f, 1.0f);
+		/*_actuators.control[actuator_controls_s::INDEX_YAW] += _param_fw_rll_to_yaw_ff.get()
+				* constrain(_actuators.control[actuator_controls_s::INDEX_ROLL], -1.0f, 1.0f);*/
 
 		_actuators.control[actuator_controls_s::INDEX_FLAPS] = _flaps_applied;
 		_actuators.control[5] = _manual_control_setpoint.aux1;
