@@ -14,7 +14,8 @@ px4_add_board(
 	DRIVERS
 		adc/ads1115
 		#barometer # all available barometer drivers
-		barometer/ms5611
+		#barometer/ms5611
+		barometer/bmp280
 		batt_smbus
 		camera_capture
 		camera_trigger
@@ -22,12 +23,13 @@ px4_add_board(
 		distance_sensor # all available distance sensor drivers
 		gps
 		#imu # all available imu drivers
-		imu/invensense/icm42688p
-		imu/invensense/icm42605
+		#imu/invensense/icm42688p
+		#imu/invensense/icm42605
+		imu/invensense/mpu9250
 		#magnetometer # all available magnetometer drivers
-		magnetometer/hmc5883
-		magnetometer/isentek/ist8310
-		magnetometer/qmc5883l
+		#magnetometer/hmc5883
+		#magnetometer/isentek/ist8310
+		#magnetometer/qmc5883l
 		pca9685_pwm_out
 		pwm_out_sim
 		rc_input
