@@ -171,7 +171,7 @@ float ECL_PitchController::control_attitude_elevator_LQR(const float dt, const E
 	/* Apply PI rate controller and store non-limited output */
 	/* FF terms scales with 1/TAS and P,I with 1/IAS^2 */
 	// _last_output = _bodyrate_setpoint * _k_ff * ctl_data.scaler +_rate_error * _k_p * ctl_data.scaler * ctl_data.scaler+ _integrator;
-	_last_output = _k_ele_u * delta_u + _k_ele_w * delta_w + _k_ele_q * delta_q + _k_ele_th * delta_th + _k_ele_intg_th * _integrator;
+	_last_output = _k_ele_u * delta_u * 0.0f + _k_ele_w * delta_w + _k_ele_q * delta_q + _k_ele_th * delta_th + _k_ele_intg_th * _integrator;
 	_last_output = _last_output*-1;
 	_last_output = _last_output*2;
 	return math::constrain(_last_output, -1.0f, 1.0f);
