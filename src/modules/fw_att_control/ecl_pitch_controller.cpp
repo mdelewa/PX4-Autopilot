@@ -141,7 +141,7 @@ float ECL_PitchController::control_attitude_elevator_LQR(const float dt, const E
 	// _rate_error = _bodyrate_setpoint - ctl_data.body_y_rate;
 	_pitch_error = ctl_data.pitch_setpoint - ctl_data.pitch;
 
-	float delta_u  = ctl_data.u-_u0/2;
+	float delta_u  = ctl_data.u-_u0;
 	float delta_w  = ctl_data.w-_w0;
 	float delta_q  = ctl_data.body_y_rate-_q0;
 	float delta_th = ctl_data.pitch-_th0;
