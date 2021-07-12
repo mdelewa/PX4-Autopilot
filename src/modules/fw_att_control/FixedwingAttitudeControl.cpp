@@ -515,9 +515,18 @@ void FixedwingAttitudeControl::Run()
 			if (_vcontrol_mode.flag_control_attitude_enabled) {
 				if (PX4_ISFINITE(_att_sp.roll_body) && PX4_ISFINITE(_att_sp.pitch_body)) {
 					if (_use_lqr_flag){
-						float roll_u  = _roll_ctrl.control_attitude_aileron_LQR(dt, control_input);
+						//float roll_u  = _roll_ctrl.control_attitude_aileron_LQR(dt, control_input);
+						_roll_ctrl.control_attitude(dt, control_input);
+						control_input.roll_rate_setpoint = _roll_ctrl.get_desired_rate();
+						float roll_u = _roll_ctrl.control_euler_rate(dt, control_input);
 						float pitch_u = _pitch_ctrl.control_attitude_elevator_LQR(dt, control_input);
 						float yaw_u = 0.0f;
+
+						/*if (wheel_control) {
+							yaw_u = _wheel_ctrl.control_bodyrate(dt, control_input);
+						} else {
+						yaw_u = _yaw_ctrl.control_euler_rate(dt, control_input);
+						}*/
 						yaw_u = _yaw_ctrl.control_attitude_rudder_LQR(dt, control_input);
 						_actuators.control[actuator_controls_s::INDEX_ROLL] = (PX4_ISFINITE(roll_u)) ? roll_u + trim_roll : trim_roll;
 
