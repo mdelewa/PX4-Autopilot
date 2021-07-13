@@ -94,8 +94,9 @@ FixedwingAttitudeControl::parameters_update()
 	_pitch_ctrl.set_k_i(_param_fw_pr_i.get());
 	_pitch_ctrl.set_k_ff(_param_fw_pr_ff.get());
 	_pitch_ctrl.set_integrator_max(_param_fw_pr_imax.get());
-	_pitch_ctrl.set_states_0(_param_fw_lqr_u0.get(), _param_fw_lqr_w0.get(), _param_fw_lqr_q0.get(), _param_fw_lqr_th0.get());
-	_pitch_ctrl.set_lqr_gains( _param_k_lqr_ele_u.get(), _param_k_lqr_ele_w.get(), _param_k_lqr_ele_q.get(), _param_k_lqr_ele_th.get(), _param_k_lqr_ele_ieth.get());
+	_lqr_long_ctrl.set_integrator_max(_param_fw_pr_imax.get());
+	_lqr_long_ctrl.set_states_0(_param_fw_lqr_u0.get(), _param_fw_lqr_w0.get(), _param_fw_lqr_q0.get(), _param_fw_lqr_th0.get());
+	_lqr_long_ctrl.set_lqr_gains( _param_k_lqr_ele_u.get(), _param_k_lqr_ele_w.get(), _param_k_lqr_ele_q.get(), _param_k_lqr_ele_th.get(), _param_k_lqr_ele_ieth.get());
 
 	/* roll control parameters */
 	_roll_ctrl.set_time_constant(_param_fw_r_tc.get());
@@ -403,6 +404,7 @@ void FixedwingAttitudeControl::Run()
 
 			if (_att_sp.pitch_reset_integral) {
 				_pitch_ctrl.reset_integrator();
+				_lqr_long_ctrl.reset_pitch_integrator();
 			}
 
 			if (_att_sp.yaw_reset_integral) {
@@ -419,9 +421,11 @@ void FixedwingAttitudeControl::Run()
 
 				_roll_ctrl.reset_integrator();
 				_pitch_ctrl.reset_integrator();
+				_lqr_long_ctrl.reset_pitch_integrator();
 				_yaw_ctrl.reset_integrator();
 				_wheel_ctrl.reset_integrator();
 			}
+
 
 			// Get velocity in body frame
 			_local_pos_sub.update(&_local_pos);
@@ -515,19 +519,19 @@ void FixedwingAttitudeControl::Run()
 			if (_vcontrol_mode.flag_control_attitude_enabled) {
 				if (PX4_ISFINITE(_att_sp.roll_body) && PX4_ISFINITE(_att_sp.pitch_body)) {
 					if (_use_lqr_flag){
-						float roll_u  = _roll_ctrl.control_attitude_aileron_LQR(dt, control_input);
-						/*_roll_ctrl.control_attitude(dt, control_input);
+						//float roll_u  = _roll_ctrl.control_attitude_aileron_LQR(dt, control_input);
+						_roll_ctrl.control_attitude(dt, control_input);
 						control_input.roll_rate_setpoint = _roll_ctrl.get_desired_rate();
-						float roll_u = _roll_ctrl.control_euler_rate(dt, control_input);*/
-						float pitch_u = _pitch_ctrl.control_attitude_elevator_LQR(dt, control_input);
+						float roll_u = _roll_ctrl.control_euler_rate(dt, control_input);
+						float pitch_u = _lqr_long_ctrl.control_attitude_elevator_LQR(dt, control_input);
 						float yaw_u = 0.0f;
 
-						/*if (wheel_control) {
+						if (wheel_control) {
 							yaw_u = _wheel_ctrl.control_bodyrate(dt, control_input);
 						} else {
 						yaw_u = _yaw_ctrl.control_euler_rate(dt, control_input);
-						}*/
-						yaw_u = _yaw_ctrl.control_attitude_rudder_LQR(dt, control_input);
+						}
+						//yaw_u = _yaw_ctrl.control_attitude_rudder_LQR(dt, control_input);
 						_actuators.control[actuator_controls_s::INDEX_ROLL] = (PX4_ISFINITE(roll_u)) ? roll_u + trim_roll : trim_roll;
 
 						if (!PX4_ISFINITE(roll_u)) {
@@ -537,7 +541,7 @@ void FixedwingAttitudeControl::Run()
 						_actuators.control[actuator_controls_s::INDEX_PITCH] = (PX4_ISFINITE(pitch_u)) ? pitch_u + trim_pitch : trim_pitch;
 
 						if (!PX4_ISFINITE(pitch_u)) {
-							_pitch_ctrl.reset_integrator();
+							_lqr_long_ctrl.reset_pitch_integrator();
 						}
 
 						_actuators.control[actuator_controls_s::INDEX_YAW] = (PX4_ISFINITE(yaw_u)) ? yaw_u + trim_yaw : trim_yaw;

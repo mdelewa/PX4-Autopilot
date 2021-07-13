@@ -37,6 +37,7 @@ px4_add_module(
 		FixedwingAttitudeControl.cpp
 		FixedwingAttitudeControl.hpp
 
+		lqr_longitudinal_controller.cpp
 		ecl_controller.cpp
 		ecl_pitch_controller.cpp
 		ecl_roll_controller.cpp

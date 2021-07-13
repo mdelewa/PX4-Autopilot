@@ -49,33 +49,9 @@
 #ifndef LQR_LONGITUDINAL_CONTROLLER_H
 #define LQR_LONGITUDINAL_CONTROLLER_H
 
+#include "ecl_controller.h" // needed for ECL_ControlData struct
 #include <mathlib/mathlib.h>
 #include <px4_log.h>
-
-struct LQR_ControlData {
-	float u;
-	float v;
-	float w;
-	float roll;
-	float pitch;
-	float yaw;
-	float body_x_rate;
-	float body_y_rate;
-	float body_z_rate;
-	float roll_setpoint;
-	float pitch_setpoint;
-	float yaw_setpoint;
-	float roll_rate_setpoint;
-	float pitch_rate_setpoint;
-	float yaw_rate_setpoint;
-	float airspeed_min;
-	float airspeed_max;
-	float airspeed;
-	float scaler;
-	float groundspeed;
-	float groundspeed_scaler;
-	bool lock_integrator;
-};
 
 class LQR_LONGITUDINAL_CONTROLLER
 {
@@ -83,7 +59,7 @@ public:
 	LQR_LONGITUDINAL_CONTROLLER();
 	~LQR_LONGITUDINAL_CONTROLLER() = default;
 
-	float control_attitude_elevator_LQR(const float dt, const LQR_ControlData &ctl_data);
+	float control_attitude_elevator_LQR(const float dt, const ECL_ControlData &ctl_data);
 
 	/* Setters */
 	void set_states_0(float u_0, float w_0, float q_0, float th_0)
@@ -106,9 +82,9 @@ public:
 	void set_integrator_max(float max){ _integrator_max = max; }
 
 	/* Getters */
-	float get_integrator(){	return _pitch_error_integrator;	}
+	float get_pitch_integrator(){	return _pitch_error_integrator;	}
 
-	void reset_integrator(){ _pitch_error_integrator = 0.0f; }
+	void reset_pitch_integrator(){ _pitch_error_integrator = 0.0f; }
 
 
 private:
@@ -123,11 +99,11 @@ private:
 	float _k_ele_th;
 	float _k_ele_intg_th;
 
-	float _pitch_error;
-
 	float _integrator_max;
 	float _last_elevator_output;
 	float _pitch_error_integrator;
+	float _pitch_error;
+
 	float constrain_airspeed(float airspeed, float minspeed, float maxspeed);
 };
 

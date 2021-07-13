@@ -38,7 +38,7 @@
  * Authors and acknowledgements in header.
  */
 
-#include "lqr_longitudinal_controller.h"
+#include "lqr_longitudinal_controller.hpp"
 #include <float.h>
 #include <lib/ecl/geo/geo.h>
 #include <mathlib/mathlib.h>
@@ -56,13 +56,8 @@ LQR_LONGITUDINAL_CONTROLLER::LQR_LONGITUDINAL_CONTROLLER() :
 	_integrator_max(0.0f),
 	_last_elevator_output(0.0f),
 	_pitch_error_integrator(0.0f),
-	_pitch_error(0.0f),
+	_pitch_error(0.0f)
 {
-}
-
-void LQR_LONGITUDINAL_CONTROLLER::reset_integrator()
-{
-	_pitch_error_integrator = 0.0f;
 }
 
 float LQR_LONGITUDINAL_CONTROLLER::constrain_airspeed(float airspeed, float minspeed, float maxspeed)
@@ -80,7 +75,7 @@ float LQR_LONGITUDINAL_CONTROLLER::constrain_airspeed(float airspeed, float mins
 	return airspeed_result;
 }
 
-float LQR_LONGITUDINAL_CONTROLLER::control_attitude_elevator_LQR(const float dt, const LQR_ControlData &ctl_data)
+float LQR_LONGITUDINAL_CONTROLLER::control_attitude_elevator_LQR(const float dt, const ECL_ControlData &ctl_data)
 {
 	/* Do not calculate control signal with bad inputs */
 	if (!(PX4_ISFINITE(ctl_data.u) &&
