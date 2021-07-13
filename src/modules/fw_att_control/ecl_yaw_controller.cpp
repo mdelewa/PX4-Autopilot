@@ -202,7 +202,7 @@ float ECL_YawController::control_attitude_rudder_LQR(const float dt, const ECL_C
 	/* Apply PI rate controller and store non-limited output */
 	/* FF terms scales with 1/TAS and P,I with 1/IAS^2 */
 	// _last_output = _bodyrate_setpoint * _k_ff * ctl_data.scaler +_rate_error * _k_p * ctl_data.scaler * ctl_data.scaler+ _integrator;
-	_last_output = _k_rud_v * delta_v * 1.0f + _k_rud_p * delta_p + _k_rud_r * delta_r + _k_rud_ph * delta_ph + _k_rud_intg_ph * _integrator;
+	_last_output = _k_rud_v * delta_v*0.0f  + _k_rud_p * delta_p * 1.0f + _k_rud_r * delta_r + _k_rud_ph * delta_ph + _k_rud_intg_ph * _integrator;
 	_last_output = _last_output*1;
 	_last_output = _last_output*2;
 	return math::constrain(_last_output, -1.0f, 1.0f);

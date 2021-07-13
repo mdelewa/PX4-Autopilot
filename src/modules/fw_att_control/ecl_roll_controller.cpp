@@ -167,7 +167,7 @@ float ECL_RollController::control_attitude_aileron_LQR(const float dt, const ECL
 	/* Apply PI rate controller and store non-limited output */
 	/* FF terms scales with 1/TAS and P,I with 1/IAS^2 */
 	// _last_output = _bodyrate_setpoint * _k_ff * ctl_data.scaler +_rate_error * _k_p * ctl_data.scaler * ctl_data.scaler+ _integrator;
-	_last_output = _k_ail_v * delta_v * 0.0f + _k_ail_p * delta_p + _k_ail_r * delta_r + _k_ail_ph * delta_ph + _k_ail_intg_ph * _integrator;
+	_last_output = _k_ail_v * delta_v *0.0f + _k_ail_p * delta_p * 1.0f + _k_ail_r * delta_r + _k_ail_ph * delta_ph + _k_ail_intg_ph * _integrator;
 	_last_output = _last_output*-1;
 	_last_output = _last_output*2;
 	return math::constrain(_last_output, -1.0f, 1.0f);
