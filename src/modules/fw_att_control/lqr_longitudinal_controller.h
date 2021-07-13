@@ -107,4 +107,4 @@ private:
 	float constrain_airspeed(float airspeed, float minspeed, float maxspeed);
 };
 
-#endif // ECL_PITCH_CONTROLLER_H
+#endif // LQR_LONGITUDINAL_CONTROLLER_H

@@ -32,7 +32,7 @@
  ****************************************************************************/
 
 #include <drivers/drv_hrt.h>
-#include "lqr_longitudinal_controller.hpp"
+#include "lqr_longitudinal_controller.h"
 #include "ecl_pitch_controller.h"
 #include "ecl_roll_controller.h"
 #include "ecl_wheel_controller.h"

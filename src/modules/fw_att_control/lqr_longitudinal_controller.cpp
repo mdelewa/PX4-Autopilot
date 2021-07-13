@@ -38,7 +38,7 @@
  * Authors and acknowledgements in header.
  */
 
-#include "lqr_longitudinal_controller.hpp"
+#include "lqr_longitudinal_controller.h"
 #include <float.h>
 #include <lib/ecl/geo/geo.h>
 #include <mathlib/mathlib.h>
