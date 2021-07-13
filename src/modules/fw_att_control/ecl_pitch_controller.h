@@ -64,8 +64,6 @@ public:
 	float control_euler_rate(const float dt, const ECL_ControlData &ctl_data) override;
 	float control_bodyrate(const float dt, const ECL_ControlData &ctl_data) override;
 
-	float control_attitude_elevator_LQR(const float dt, const ECL_ControlData &ctl_data);
-
 	/* Additional Setters */
 	void set_max_rate_pos(float max_rate_pos)
 	{
@@ -81,36 +79,6 @@ public:
 	{
 		_bodyrate_setpoint = math::constrain(rate, -_max_rate_neg, _max_rate);
 	}
-
-	void set_states_0(float u_0, float w_0, float q_0, float th_0)
-	{
-		_u0  = u_0;
-		_w0  = w_0;
-		_q0  = q_0;
-		_th0 = th_0;
-	}
-
-	void set_lqr_gains(float gain_u, float gain_w, float gain_q, float gain_th,  float gain_intg_th)
-	{
-		_k_ele_u       = gain_u;
-		_k_ele_w       = gain_w;
-		_k_ele_q       = gain_q;
-		_k_ele_th      = gain_th;
-		_k_ele_intg_th = gain_intg_th;
-	}
-private:
-	float _u0;
-	float _w0;
-	float _q0;
-	float _th0;
-
-	float _k_ele_u;
-	float _k_ele_w;
-	float _k_ele_q;
-	float _k_ele_th;
-	float _k_ele_intg_th;
-
-	float _pitch_error;
 
 protected:
 	float _max_rate_neg{0.0f};
