@@ -104,7 +104,6 @@ private:
 	float _pitch_error_integrator;
 	float _pitch_error;
 
-	float constrain_airspeed(float airspeed, float minspeed, float maxspeed);
 };
 
 #endif // LQR_LONGITUDINAL_CONTROLLER_H

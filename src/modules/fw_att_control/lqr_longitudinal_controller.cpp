@@ -60,21 +60,6 @@ LQR_LONGITUDINAL_CONTROLLER::LQR_LONGITUDINAL_CONTROLLER() :
 {
 }
 
-float LQR_LONGITUDINAL_CONTROLLER::constrain_airspeed(float airspeed, float minspeed, float maxspeed)
-{
-	float airspeed_result = airspeed;
-
-	if (!PX4_ISFINITE(airspeed)) {
-		/* airspeed is NaN, +- INF or not available, pick center of band */
-		airspeed_result = 0.5f * (minspeed + maxspeed);
-
-	} else if (airspeed < minspeed) {
-		airspeed_result = minspeed;
-	}
-
-	return airspeed_result;
-}
-
 float LQR_LONGITUDINAL_CONTROLLER::control_attitude_elevator_LQR(const float dt, const ECL_ControlData &ctl_data)
 {
 	/* Do not calculate control signal with bad inputs */
