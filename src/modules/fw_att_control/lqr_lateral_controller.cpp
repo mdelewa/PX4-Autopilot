@@ -32,8 +32,8 @@
  ****************************************************************************/
 
 /**
- * @file lqr_longitudinal_controller.cpp
- * Implementation of a longitudinal pitch LQR controller.
+ * @file lqr_lateral_controller.cpp
+ * Implementation of a lateral roll & yaw LQR controller with turn coordination.
  *
  * Authors and acknowledgements in header.
  */
