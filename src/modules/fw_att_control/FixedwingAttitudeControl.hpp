@@ -33,6 +33,7 @@
 
 #include <drivers/drv_hrt.h>
 #include "lqr_longitudinal_controller.h"
+#include "lqr_lateral_controller.h"
 #include "ecl_pitch_controller.h"
 #include "ecl_roll_controller.h"
 #include "ecl_wheel_controller.h"
@@ -246,6 +247,8 @@ private:
 	ECL_YawController		_yaw_ctrl;
 	ECL_WheelController		_wheel_ctrl;
 	LQR_LONGITUDINAL_CONTROLLER     _lqr_long_ctrl;
+	LQR_LATERAL_CONTROLLER          _lqr_lat_ctrl;
+
 	void control_flaps(const float dt);
 
 	/**
