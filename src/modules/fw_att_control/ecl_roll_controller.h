@@ -61,27 +61,6 @@ public:
 	float control_attitude(const float dt, const ECL_ControlData &ctl_data) override;
 	float control_euler_rate(const float dt, const ECL_ControlData &ctl_data) override;
 	float control_bodyrate(const float dt, const ECL_ControlData &ctl_data) override;
-
-	float control_attitude_aileron_LQR(const float dt, const ECL_ControlData &ctl_data);
-
-	void set_lqr_gains(float gain_v, float gain_p, float gain_r, float gain_ph,  float gain_intg_ph)
-	{
-		_k_ail_v       = gain_v;
-		_k_ail_p       = gain_p;
-		_k_ail_r       = gain_r;
-		_k_ail_ph      = gain_ph;
-		_k_ail_intg_ph = gain_intg_ph;
-	}
-
-private:
-
-	float _k_ail_v;
-	float _k_ail_p;
-	float _k_ail_r;
-	float _k_ail_ph;
-	float _k_ail_intg_ph;
-
-	float _roll_error;
 };
 
 #endif // ECL_ROLL_CONTROLLER_H
