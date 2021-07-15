@@ -436,9 +436,9 @@ void FixedwingAttitudeControl::Run()
 
 			/* Prepare data for attitude controllers */
 			ECL_ControlData control_input{};
-			control_input.u = vel_body(1);
-			control_input.v = vel_body(2);
-			control_input.w = vel_body(3);
+			control_input.u = vel_body(0);
+			control_input.v = vel_body(1);
+			control_input.w = vel_body(2);
 			control_input.roll = euler_angles.phi();
 			control_input.pitch = euler_angles.theta();
 			control_input.yaw = euler_angles.psi();
@@ -529,8 +529,8 @@ void FixedwingAttitudeControl::Run()
 						float pitch_u = _lqr_long_ctrl.control_attitude_elevator_LQR(dt, control_input);
 
 						Vector2f ail_rud_u = _lqr_lat_ctrl.control_attitude_aileron_rudder_LQR(dt, control_input);
-						float roll_u = ail_rud_u(1);
-						float yaw_u  = ail_rud_u(2);
+						float roll_u = ail_rud_u(0);
+						float yaw_u  = ail_rud_u(1);
 
 						/*float yaw_u = 0.0f;
 
@@ -539,10 +539,9 @@ void FixedwingAttitudeControl::Run()
 						} else {
 							yaw_u = _yaw_ctrl.control_euler_rate(dt, control_input);
 						}*/
-						//yaw_u = _yaw_ctrl.control_attitude_rudder_LQR(dt, control_input);
 
 						_actuators.control[actuator_controls_s::INDEX_ROLL] = (PX4_ISFINITE(roll_u)) ? roll_u + trim_roll : trim_roll;
-
+						printf("roll_u = %.6f ,  yaw_u = %.6f \n", (double) roll_u, (double) yaw_u);
 						if (!PX4_ISFINITE(roll_u)) {
 							_roll_ctrl.reset_integrator();
 							_lqr_lat_ctrl.reset_roll_integrator();
