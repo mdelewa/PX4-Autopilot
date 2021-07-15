@@ -112,13 +112,13 @@ Vector2f LQR_LATERAL_CONTROLLER::control_attitude_aileron_rudder_LQR(const float
 
 	/* Apply LQR controller and store non-limited output */
 
-	_last_aileron_output = _k_ail_v * delta_v * 0.0f + _k_ail_p * delta_p * 1.0f + _k_ail_r * delta_r + _k_ail_ph * delta_ph + _k_ail_intg_ph * _roll_error_integrator;
-	_last_aileron_output = _last_aileron_output*-1;
-	_last_aileron_output = _last_aileron_output*2;
+	_last_aileron_output = _k_ail_v * delta_v * 1.0f + _k_ail_p * delta_p * 1.0f + _k_ail_r * delta_r + _k_ail_ph * delta_ph + _k_ail_intg_ph * _roll_error_integrator ;
+	_last_aileron_output = _last_aileron_output * -1.0f;
+	_last_aileron_output = _last_aileron_output * 2.0f;
 
-	_last_rudder_output = _k_rud_v * delta_v * 0.0f  + _k_rud_p * delta_p * 1.0f + _k_rud_r * delta_r + _k_rud_ph * delta_ph + _k_rud_intg_ph * _roll_error_integrator;
-	_last_rudder_output = _last_rudder_output*1;
-	_last_rudder_output = _last_rudder_output*2;
+	_last_rudder_output = _k_rud_v * delta_v * 1.0f  + _k_rud_p * delta_p * 1.0f + _k_rud_r * delta_r + _k_rud_ph * delta_ph + _k_rud_intg_ph * _roll_error_integrator ;
+	_last_rudder_output = _last_rudder_output * 1.0f;
+	_last_rudder_output = _last_rudder_output * 2.0f;
 
 	float last_ail_constrained = math::constrain(_last_aileron_output, -1.0f, 1.0f);
 	float last_rud_constrained = math::constrain(_last_rudder_output, -1.0f, 1.0f);
