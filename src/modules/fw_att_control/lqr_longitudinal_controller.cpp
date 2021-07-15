@@ -108,7 +108,7 @@ float LQR_LONGITUDINAL_CONTROLLER::control_attitude_elevator_LQR(const float dt,
 	/* Apply LQR controller and store non-limited output */
 	_last_elevator_output = _k_ele_u * delta_u + _k_ele_w * delta_w + _k_ele_q * delta_q + _k_ele_th * delta_th + _k_ele_intg_th * _pitch_error_integrator;
 	/* u = kx not u ~= -kx due to different sign convention for servo */
-	_last_elevator_output = _last_elevator_output*1; // u ~= -kx not
-	_last_elevator_output = _last_elevator_output*2;
+	_last_elevator_output = _last_elevator_output * 1.0f;
+	_last_elevator_output = _last_elevator_output * 2.0f;
 	return math::constrain(_last_elevator_output, -1.0f, 1.0f);
 }
