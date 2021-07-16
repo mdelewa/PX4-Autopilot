@@ -434,6 +434,7 @@ void FixedwingAttitudeControl::Run()
 			_local_pos_sub.update(&_local_pos);
 			matrix::Vector3f vel_body = matrix::Quatf(att.q).conjugate_inversed(matrix::Vector3f(_local_pos.vx, _local_pos.vy, _local_pos.vz));
 
+			//printf("phi = %.6f ,  theta = %.6f,  psi = %.6f \n", (double) euler_angles.phi(), (double) euler_angles.theta(), (double) euler_angles.psi());
 			/* Prepare data for attitude controllers */
 			ECL_ControlData control_input{};
 			control_input.u = vel_body(0);
@@ -541,7 +542,9 @@ void FixedwingAttitudeControl::Run()
 						}*/
 
 						_actuators.control[actuator_controls_s::INDEX_ROLL] = (PX4_ISFINITE(roll_u)) ? roll_u + trim_roll : trim_roll;
-						printf("roll_u = %.6f ,  yaw_u = %.6f \n", (double) roll_u, (double) yaw_u);
+						//printf("pitch_u = %.6f , roll_u = %.6f ,  yaw_u = %.6f \n", (double) pitch_u, (double) roll_u, (double) yaw_u);
+						printf("p = %.6f \n", (double) control_input.body_x_rate);
+
 						if (!PX4_ISFINITE(roll_u)) {
 							_roll_ctrl.reset_integrator();
 							_lqr_lat_ctrl.reset_roll_integrator();
@@ -574,7 +577,6 @@ void FixedwingAttitudeControl::Run()
 
 						if (wheel_control) {
 							_wheel_ctrl.control_attitude(dt, control_input);
-							_lqr_lat_ctrl.reset_roll_integrator();
 							_yaw_ctrl.reset_integrator();
 						} else {
 						// runs last, because is depending on output of roll and pitch attitude

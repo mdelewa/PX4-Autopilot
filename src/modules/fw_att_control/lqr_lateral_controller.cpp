@@ -116,7 +116,7 @@ Vector2f LQR_LATERAL_CONTROLLER::control_attitude_aileron_rudder_LQR(const float
 	_last_aileron_output = _last_aileron_output * -1.0f;
 	_last_aileron_output = _last_aileron_output * 2.0f;
 
-	_last_rudder_output = _k_rud_v * delta_v * 1.0f  + _k_rud_p * delta_p * 1.0f + _k_rud_r * delta_r + _k_rud_ph * delta_ph + _k_rud_intg_ph * _roll_error_integrator ;
+	_last_rudder_output = _k_rud_v * delta_v * 1.0f  + _k_rud_p * delta_p * 1.0f + _k_rud_r * delta_r * 1.0f + _k_rud_ph * delta_ph * 1.0f + _k_rud_intg_ph * _roll_error_integrator * 1.0f ;
 	_last_rudder_output = _last_rudder_output * 1.0f;
 	_last_rudder_output = _last_rudder_output * 2.0f;
 
