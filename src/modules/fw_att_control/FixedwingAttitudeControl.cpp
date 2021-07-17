@@ -45,6 +45,7 @@ FixedwingAttitudeControl::FixedwingAttitudeControl(bool vtol) :
 	WorkItem(MODULE_NAME, px4::wq_configurations::nav_and_controllers),
 	_actuators_0_pub(vtol ? ORB_ID(actuator_controls_virtual_fw) : ORB_ID(actuator_controls_0)),
 	_attitude_sp_pub(vtol ? ORB_ID(fw_virtual_attitude_setpoint) : ORB_ID(vehicle_attitude_setpoint)),
+	_lqr_data_pub(vtol ? ORB_ID(lqr_validation) : ORB_ID(lqr_validation)),
 	_loop_perf(perf_alloc(PC_ELAPSED, MODULE_NAME": cycle"))
 {
 	// check if VTOL first
@@ -455,6 +456,18 @@ void FixedwingAttitudeControl::Run()
 			control_input.scaler = _airspeed_scaling;
 			control_input.lock_integrator = lock_integrator;
 
+			_lqr_data.u = control_input.u;
+			_lqr_data.v = control_input.v;
+			_lqr_data.w = control_input.w;
+			_lqr_data.phi = control_input.roll;
+			_lqr_data.theta = control_input.pitch;
+			_lqr_data.psi = control_input.yaw;
+			_lqr_data.p = control_input.body_x_rate;
+			_lqr_data.q = control_input.body_y_rate;
+			_lqr_data.r = control_input.body_z_rate;
+			_lqr_data.phi_sp = control_input.roll_setpoint;
+			_lqr_data.theta_sp = control_input.pitch_setpoint;
+
 			if (wheel_control) {
 				//_local_pos_sub.update(&_local_pos);
 
@@ -543,7 +556,7 @@ void FixedwingAttitudeControl::Run()
 
 						_actuators.control[actuator_controls_s::INDEX_ROLL] = (PX4_ISFINITE(roll_u)) ? roll_u + trim_roll : trim_roll;
 						//printf("pitch_u = %.6f , roll_u = %.6f ,  yaw_u = %.6f \n", (double) pitch_u, (double) roll_u, (double) yaw_u);
-						printf("p = %.6f \n", (double) control_input.body_x_rate);
+						//printf("p = %.6f \n", (double) control_input.body_x_rate);
 
 						if (!PX4_ISFINITE(roll_u)) {
 							_roll_ctrl.reset_integrator();
@@ -568,6 +581,10 @@ void FixedwingAttitudeControl::Run()
 							_wheel_ctrl.reset_integrator();
 							_lqr_lat_ctrl.reset_roll_integrator();
 						}
+
+						_lqr_data.roll_u = roll_u;
+						_lqr_data.pitch_u = pitch_u;
+						_lqr_data.yaw_u = yaw_u;
 
 
 					}
@@ -626,7 +643,6 @@ void FixedwingAttitudeControl::Run()
 
 
 					}
-
 
 
 
@@ -712,11 +728,15 @@ void FixedwingAttitudeControl::Run()
 		_actuators.timestamp = hrt_absolute_time();
 		_actuators.timestamp_sample = att.timestamp;
 
+		_lqr_data.timestamp = hrt_absolute_time();
+
 		/* Only publish if any of the proper modes are enabled */
 		if (_vcontrol_mode.flag_control_rates_enabled ||
 		    _vcontrol_mode.flag_control_attitude_enabled ||
 		    _vcontrol_mode.flag_control_manual_enabled) {
 			_actuators_0_pub.publish(_actuators);
+			_lqr_data_pub.publish(_lqr_data);
+
 		}
 	}
 

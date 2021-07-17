@@ -93,6 +93,7 @@ set(msg_files
 	led_control.msg
 	log_message.msg
 	logger_status.msg
+	lqr_validation.msg
 	mag_worker_data.msg
 	manual_control_setpoint.msg
 	manual_control_switches.msg
