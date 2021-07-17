@@ -102,7 +102,8 @@ float LQR_LONGITUDINAL_CONTROLLER::control_attitude_elevator_LQR(const float dt,
 		}
 
 		/* add and constrain */
-		_pitch_error_integrator = math::constrain(_pitch_error_integrator + id , -_integrator_max, _integrator_max);
+		//_pitch_error_integrator = math::constrain(_pitch_error_integrator + id , -_integrator_max, _integrator_max);
+		_pitch_error_integrator = _pitch_error_integrator + id;
 	}
 
 	/* Apply LQR controller and store non-limited output */

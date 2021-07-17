@@ -107,10 +107,13 @@ Vector2f LQR_LATERAL_CONTROLLER::control_attitude_aileron_rudder_LQR(const float
 		}
 
 		/* add and constrain */
-		_roll_error_integrator = math::constrain(_roll_error_integrator + id , -_integrator_max, _integrator_max);
+		//_roll_error_integrator = math::constrain(_roll_error_integrator + id , -_integrator_max, _integrator_max);
+		_roll_error_integrator = _roll_error_integrator + id;
 	}
 
 	/* Apply LQR controller and store non-limited output */
+
+	//printf("delta_v = %.6f , delta_p = %.6f ,  delta_r = %.6f,  delta_ph = %.6f \n", (double) delta_v, (double) delta_p, (double) delta_r, (double) delta_ph);
 
 	_last_aileron_output = _k_ail_v * delta_v * 1.0f + _k_ail_p * delta_p * 1.0f + _k_ail_r * delta_r + _k_ail_ph * delta_ph + _k_ail_intg_ph * _roll_error_integrator ;
 	_last_aileron_output = _last_aileron_output * -1.0f;
