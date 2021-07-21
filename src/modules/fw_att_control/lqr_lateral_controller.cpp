@@ -57,7 +57,8 @@ LQR_LATERAL_CONTROLLER::LQR_LATERAL_CONTROLLER() :
 	_integrator_max(0.0f),
 	_last_aileron_output(0.0f),
 	_last_rudder_output(0.0f),
-	_roll_error_integrator(0.0f),
+	_roll_error_integrator_ail(0.0f),
+	_roll_error_integrator_rud(0.0f),
 	_roll_error(0.0f)
 {
 }
@@ -92,34 +93,44 @@ Vector2f LQR_LATERAL_CONTROLLER::control_attitude_aileron_rudder_LQR(const float
 	if (!ctl_data.lock_integrator) {
 
 		/* Integral term */
-		float id = _roll_error * dt;
+		float id_ail = _roll_error * dt;
+		float id_rud = _roll_error * dt;
 
 		/*
 		 * anti-windup: do not allow integrator to increase if actuator is at limit
 		 */
-		if (_last_aileron_output < -1.0f || _last_rudder_output < -1.0f) {
+		if (_last_aileron_output < -1.0f) {
 			/* only allow motion to center: increase value */
-			id = math::max(id, 0.0f);
+			id_ail = math::max(id_ail, 0.0f);
 
-		} else if (_last_aileron_output > 1.0f || _last_rudder_output > 1.0f) {
+		} else if (_last_aileron_output > 1.0f) {
 			/* only allow motion to center: decrease value */
-			id = math::min(id, 0.0f);
+			id_ail = math::min(id_ail, 0.0f);
+		}
+		if ( _last_rudder_output < -1.0f) {
+			/* only allow motion to center: increase value */
+			id_rud = math::max(id_rud, 0.0f);
+
+		} else if (_last_rudder_output > 1.0f) {
+			/* only allow motion to center: decrease value */
+			id_rud = math::min(id_rud, 0.0f);
 		}
 
 		/* add and constrain */
 		//_roll_error_integrator = math::constrain(_roll_error_integrator + id , -_integrator_max, _integrator_max);
-		_roll_error_integrator = _roll_error_integrator + id;
+		_roll_error_integrator_ail = _roll_error_integrator_ail + id_ail;
+		_roll_error_integrator_rud = _roll_error_integrator_rud + id_rud;
 	}
 
 	/* Apply LQR controller and store non-limited output */
 
 	//printf("delta_v = %.6f , delta_p = %.6f ,  delta_r = %.6f,  delta_ph = %.6f \n", (double) delta_v, (double) delta_p, (double) delta_r, (double) delta_ph);
 
-	_last_aileron_output = _k_ail_v * delta_v * 1.0f + _k_ail_p * delta_p * 1.0f + _k_ail_r * delta_r + _k_ail_ph * delta_ph + _k_ail_intg_ph * _roll_error_integrator ;
+	_last_aileron_output = _k_ail_v * delta_v + _k_ail_p * delta_p + _k_ail_r * delta_r + _k_ail_ph * delta_ph + _k_ail_intg_ph * _roll_error_integrator_ail ;
 	_last_aileron_output = _last_aileron_output * -1.0f;
 	_last_aileron_output = _last_aileron_output * 2.0f;
 
-	_last_rudder_output = _k_rud_v * delta_v * 1.0f  + _k_rud_p * delta_p * 1.0f + _k_rud_r * delta_r * 1.0f + _k_rud_ph * delta_ph * 1.0f + _k_rud_intg_ph * _roll_error_integrator * 1.0f ;
+	_last_rudder_output = _k_rud_v * delta_v + _k_rud_p * delta_p + _k_rud_r * delta_r + _k_rud_ph * delta_ph + _k_rud_intg_ph * _roll_error_integrator_rud  ;
 	_last_rudder_output = _last_rudder_output * 1.0f;
 	_last_rudder_output = _last_rudder_output * 2.0f;
 

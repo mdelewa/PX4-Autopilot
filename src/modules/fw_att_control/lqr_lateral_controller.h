@@ -88,9 +88,10 @@ public:
 	void set_integrator_max(float max){ _integrator_max = max; }
 
 	/* Getters */
-	float get_roll_integrator(){ return _roll_error_integrator; }
+	//float get_roll_integrator(){ return _roll_error_integrator; }
 
-	void reset_roll_integrator(){ _roll_error_integrator = 0.0f; }
+	void reset_roll_integrator_ail(){ _roll_error_integrator_ail = 0.0f; }
+	void reset_roll_integrator_rud(){ _roll_error_integrator_rud = 0.0f; }
 
 
 private:
@@ -110,7 +111,8 @@ private:
 	float _integrator_max;
 	float _last_aileron_output;
 	float _last_rudder_output;
-	float _roll_error_integrator;
+	float _roll_error_integrator_ail;
+	float _roll_error_integrator_rud;
 	float _roll_error;
 
 };

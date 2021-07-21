@@ -401,7 +401,7 @@ void FixedwingAttitudeControl::Run()
 			/* reset integrals where needed */
 			if (_att_sp.roll_reset_integral) {
 				_roll_ctrl.reset_integrator();
-				_lqr_lat_ctrl.reset_roll_integrator();
+				_lqr_lat_ctrl.reset_roll_integrator_ail();
 			}
 
 			if (_att_sp.pitch_reset_integral) {
@@ -412,7 +412,7 @@ void FixedwingAttitudeControl::Run()
 			if (_att_sp.yaw_reset_integral) {
 				_yaw_ctrl.reset_integrator();
 				_wheel_ctrl.reset_integrator();
-				_lqr_lat_ctrl.reset_roll_integrator();
+				_lqr_lat_ctrl.reset_roll_integrator_rud();
 			}
 
 			/* Reset integrators if the aircraft is on ground
@@ -425,7 +425,8 @@ void FixedwingAttitudeControl::Run()
 				_roll_ctrl.reset_integrator();
 				_pitch_ctrl.reset_integrator();
 				_lqr_long_ctrl.reset_pitch_integrator();
-				_lqr_lat_ctrl.reset_roll_integrator();
+				_lqr_lat_ctrl.reset_roll_integrator_ail();
+				_lqr_lat_ctrl.reset_roll_integrator_rud();
 				_yaw_ctrl.reset_integrator();
 				_wheel_ctrl.reset_integrator();
 			}
@@ -560,7 +561,7 @@ void FixedwingAttitudeControl::Run()
 
 						if (!PX4_ISFINITE(roll_u)) {
 							_roll_ctrl.reset_integrator();
-							_lqr_lat_ctrl.reset_roll_integrator();
+							_lqr_lat_ctrl.reset_roll_integrator_ail();
 						}
 
 						_actuators.control[actuator_controls_s::INDEX_PITCH] = (PX4_ISFINITE(pitch_u)) ? pitch_u + trim_pitch : trim_pitch;
@@ -579,7 +580,7 @@ void FixedwingAttitudeControl::Run()
 						if (!PX4_ISFINITE(yaw_u)) {
 							_yaw_ctrl.reset_integrator();
 							_wheel_ctrl.reset_integrator();
-							_lqr_lat_ctrl.reset_roll_integrator();
+							_lqr_lat_ctrl.reset_roll_integrator_rud();
 						}
 
 						_lqr_data.roll_u = roll_u;
