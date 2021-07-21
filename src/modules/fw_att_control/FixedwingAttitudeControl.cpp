@@ -541,6 +541,10 @@ void FixedwingAttitudeControl::Run()
 						/*_roll_ctrl.control_attitude(dt, control_input);
 						control_input.roll_rate_setpoint = _roll_ctrl.get_desired_rate();
 						float roll_u = _roll_ctrl.control_euler_rate(dt, control_input);*/
+						/*_pitch_ctrl.control_attitude(dt, control_input);
+						control_input.pitch_rate_setpoint = _pitch_ctrl.get_desired_rate();
+						float pitch_u = _pitch_ctrl.control_euler_rate(dt, control_input);*/
+
 						float pitch_u = _lqr_long_ctrl.control_attitude_elevator_LQR(dt, control_input);
 
 						Vector2f ail_rud_u = _lqr_lat_ctrl.control_attitude_aileron_rudder_LQR(dt, control_input);
