@@ -436,7 +436,6 @@ void FixedwingAttitudeControl::Run()
 			_local_pos_sub.update(&_local_pos);
 			matrix::Vector3f vel_body = matrix::Quatf(att.q).conjugate_inversed(matrix::Vector3f(_local_pos.vx, _local_pos.vy, _local_pos.vz));
 
-			//printf("phi = %.6f ,  theta = %.6f,  psi = %.6f \n", (double) euler_angles.phi(), (double) euler_angles.theta(), (double) euler_angles.psi());
 			/* Prepare data for attitude controllers */
 			ECL_ControlData control_input{};
 			control_input.u = vel_body(0);
@@ -538,30 +537,13 @@ void FixedwingAttitudeControl::Run()
 				if (PX4_ISFINITE(_att_sp.roll_body) && PX4_ISFINITE(_att_sp.pitch_body)) {
 					if (_use_lqr_flag){
 
-						/*_roll_ctrl.control_attitude(dt, control_input);
-						control_input.roll_rate_setpoint = _roll_ctrl.get_desired_rate();
-						float roll_u = _roll_ctrl.control_euler_rate(dt, control_input);*/
-						/*_pitch_ctrl.control_attitude(dt, control_input);
-						control_input.pitch_rate_setpoint = _pitch_ctrl.get_desired_rate();
-						float pitch_u = _pitch_ctrl.control_euler_rate(dt, control_input);*/
-
 						float pitch_u = _lqr_long_ctrl.control_attitude_elevator_LQR(dt, control_input);
 
 						Vector2f ail_rud_u = _lqr_lat_ctrl.control_attitude_aileron_rudder_LQR(dt, control_input);
 						float roll_u = ail_rud_u(0);
 						float yaw_u  = ail_rud_u(1);
 
-						/*float yaw_u = 0.0f;
-
-						if (wheel_control) {
-							yaw_u = _wheel_ctrl.control_bodyrate(dt, control_input);
-						} else {
-							yaw_u = _yaw_ctrl.control_euler_rate(dt, control_input);
-						}*/
-
 						_actuators.control[actuator_controls_s::INDEX_ROLL] = (PX4_ISFINITE(roll_u)) ? roll_u + trim_roll : trim_roll;
-						//printf("pitch_u = %.6f , roll_u = %.6f ,  yaw_u = %.6f \n", (double) pitch_u, (double) roll_u, (double) yaw_u);
-						//printf("p = %.6f \n", (double) control_input.body_x_rate);
 
 						if (!PX4_ISFINITE(roll_u)) {
 							_roll_ctrl.reset_integrator();
@@ -590,8 +572,6 @@ void FixedwingAttitudeControl::Run()
 						_lqr_data.roll_u = roll_u;
 						_lqr_data.pitch_u = pitch_u;
 						_lqr_data.yaw_u = yaw_u;
-
-
 					}
 					else{
 						_roll_ctrl.control_attitude(dt, control_input);
@@ -633,7 +613,6 @@ void FixedwingAttitudeControl::Run()
 							_pitch_ctrl.reset_integrator();
 						}
 
-
 						_actuators.control[actuator_controls_s::INDEX_YAW] = (PX4_ISFINITE(yaw_u)) ? yaw_u + trim_yaw : trim_yaw;
 
 						/* add in manual rudder control in manual modes */
@@ -646,10 +625,7 @@ void FixedwingAttitudeControl::Run()
 							_wheel_ctrl.reset_integrator();
 						}
 
-
 					}
-
-
 
 					/* throttle passed through if it is finite and if no engine failure was detected */
 					_actuators.control[actuator_controls_s::INDEX_THROTTLE] = (PX4_ISFINITE(_att_sp.thrust_body[0])
