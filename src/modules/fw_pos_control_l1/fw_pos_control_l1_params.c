@@ -58,7 +58,7 @@
  * @increment 0.5
  * @group FW L1 Control
  */
-PARAM_DEFINE_FLOAT(FW_L1_PERIOD, 20.0f);
+PARAM_DEFINE_FLOAT(FW_L1_PERIOD, 15.0f);
 
 /**
  * L1 damping
@@ -71,7 +71,7 @@ PARAM_DEFINE_FLOAT(FW_L1_PERIOD, 20.0f);
  * @increment 0.05
  * @group FW L1 Control
  */
-PARAM_DEFINE_FLOAT(FW_L1_DAMPING, 0.75f);
+PARAM_DEFINE_FLOAT(FW_L1_DAMPING, 0.8f);
 
 /**
  * L1 controller roll slew rate limit.
